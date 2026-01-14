@@ -1,33 +1,53 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class Example : MonoBehaviour
 {
-    public event Action<EnemyList> EnemyUpdated;
+    private Dictionary<Enemy, Func<bool>> _enemies = new();
+    private List<Enemy> _enemiesRemove = new();
 
-    private EnemyList _enemyList = new EnemyList();
+    private int _count = 0;
 
     private void Update()
     {
+
         if(Input.GetKeyDown(KeyCode.Alpha1))
         {
-            _enemyList.AddEnemy(TypeDie.Die);
+            Enemy enemy = new Enemy(Time.time, "Enemy_" + _count.ToString());
+            
+            _enemies.Add(enemy, () => Input.GetKeyDown(KeyCode.F) || _enemies.Count > 10);
+            
+            _count++;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if(Input.GetKeyDown(KeyCode.Alpha2))
         {
-            _enemyList.AddEnemy(TypeDie.Time, this, 5);
+            Enemy enemy = new Enemy(Time.time, "Enemy_" + _count.ToString());
+            
+            _enemies.Add(enemy, () => Time.time - enemy.CreateTime >= 5 || _enemies.Count > 10);
+
+            _count++;
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
+        foreach(var enemyValue in _enemies)
         {
-            _enemyList.EnemyDestroyTo(enemy => enemy.TypeDie == TypeDie.Die);
+            Debug.Log(enemyValue.Key.Name);
         }
 
-        _enemyList.EnemyDestroyTo(enemy => enemy.TypeDie == TypeDie.Time && enemy.CurrentTime <= 0);
+        _enemiesRemove.Clear();
 
-        _enemyList.EnemyDestroyMaxCount(count => count > 10);
+        foreach (var enemyValue in _enemies)
+        {
+            if (enemyValue.Value())
+            {
+                _enemiesRemove.Add(enemyValue.Key);
+                break;
+            }       
+        }
 
-        EnemyUpdated?.Invoke(_enemyList);
+        foreach (var enemyValue in _enemiesRemove)
+            _enemies.Remove(enemyValue);
     }
 }

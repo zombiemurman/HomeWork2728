@@ -3,23 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TimerView : MonoBehaviour
+public class TimerHeartsView : MonoBehaviour
 {
-    public event Func<float> CurrentTimed;
-
-    public event Func<bool> IsTimerRanning;
-
-    public event Action TimerPlayed;
-
-    public event Action TimerPaused;
-    
-    public event Action TimerStoped;
-
-    [SerializeField] private Slider _slider;
-
     [SerializeField] private RectTransform _layoutHearts;
 
     [SerializeField] private Image _heartPrefab;
+
+    private bool _isRunning;
+    
+    private bool _isPaused;
 
     private float _currentTime;
 
@@ -29,43 +21,56 @@ public class TimerView : MonoBehaviour
 
     private void Update()
     {
-        if(IsTimerRanning != null)
+        if (_isRunning == false)
+            return;
+
+        if(_isPaused)
+            return;
+
+        if (Images.Count > (int)_currentTime)
         {
-            if (IsTimerRanning.Invoke() == false)
-                return;
+            Destroy(Images[Images.Count - 1].gameObject);
+            Images.RemoveAt(Images.Count - 1);
         }
 
-        if (CurrentTimed != null)
-        {
-            _currentTime = CurrentTimed.Invoke();
-            _slider.value = _currentTime / _timerSeconds;
-
-            if (Images.Count > (int)_currentTime)
-            {
-                Destroy(Images[Images.Count - 1].gameObject);
-                Images.RemoveAt(Images.Count - 1);
-            }  
-        }       
     }
 
     public void Initialize(float timerSeconds)
     {
+        _currentTime = timerSeconds;
         _timerSeconds = timerSeconds;
 
         CreateHearts();
     }
 
+    public void SetTimerRunning(bool isRunning)
+    {
+        _isRunning = isRunning;
+        
+        if(_isRunning)
+            OnTimerPlayed();
+    }
+
+    public void SetCurrentTime(float currentTime)
+    { 
+        _currentTime = currentTime; 
+    }
+
+    public void SetTimerPaused(bool isPaused)
+    {
+        _isPaused = isPaused;
+    }
+
+    
+
     public void OnTimerPlayed()
     {
-        TimerPlayed?.Invoke();
+        _currentTime = _timerSeconds;
 
         DestroyHearts();
         CreateHearts();
     }
 
-    public void OnTimerPaused() => TimerPaused?.Invoke();
-    public void OnTimerStop() => TimerStoped?.Invoke();
-    
     private void DestroyHearts()
     {
         while (Images.Count > 0)

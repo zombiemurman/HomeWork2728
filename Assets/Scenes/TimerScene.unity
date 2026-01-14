@@ -361,7 +361,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46d0558c7973a0044ba3b74444173fb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timerView: {fileID: 2040459882}
+  _timerSliderView: {fileID: 1309606622}
+  _timerHeartsView: {fileID: 1246130745}
+  _buttonView: {fileID: 2037259200}
   _timerTime: 10
 --- !u!4 &166569881
 Transform:
@@ -461,7 +463,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2040459882}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: TimerView, Assembly-CSharp
         m_MethodName: OnTimerPaused
         m_Mode: 1
@@ -812,7 +814,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2040459882}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: TimerView, Assembly-CSharp
         m_MethodName: OnTimerStop
         m_Mode: 1
@@ -1151,7 +1153,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2040459882}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: TimerView, Assembly-CSharp
         m_MethodName: OnTimerPlayed
         m_Mode: 1
@@ -1348,6 +1350,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1246130743}
   - component: {fileID: 1246130744}
+  - component: {fileID: 1246130745}
   m_Layer: 5
   m_Name: LayoutHearts
   m_TagString: Untagged
@@ -1400,6 +1403,21 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1246130745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1246130742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c07372c2609fce47ae81f4c40947a9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _layoutHearts: {fileID: 1246130743}
+  _heartPrefab: {fileID: 3802426646317190032, guid: 96d0b4f3402a59c40a52b59f04a10f6b,
+    type: 3}
 --- !u!1 &1309606619
 GameObject:
   m_ObjectHideFlags: 0
@@ -1410,6 +1428,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1309606620}
   - component: {fileID: 1309606621}
+  - component: {fileID: 1309606622}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -1490,6 +1509,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1309606622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1309606619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c8c95667243aaf48b6a446a6551deff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _slider: {fileID: 1309606621}
 --- !u!1 &1316571097
 GameObject:
   m_ObjectHideFlags: 0
@@ -1751,8 +1783,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2037259199}
+  - component: {fileID: 2037259200}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: ButtonsView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1780,6 +1813,21 @@ RectTransform:
   m_AnchoredPosition: {x: -5.8, y: -32.5}
   m_SizeDelta: {x: 161.2, y: 52.3}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2037259200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2037259198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7753c5b08774614fb02c6b617e0f5dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _battonPlay: {fileID: 949047347}
+  _battonPaused: {fileID: 276396963}
+  _battonStop: {fileID: 702311363}
 --- !u!1 &2040459881
 GameObject:
   m_ObjectHideFlags: 0
@@ -1792,7 +1840,6 @@ GameObject:
   - component: {fileID: 2040459885}
   - component: {fileID: 2040459884}
   - component: {fileID: 2040459883}
-  - component: {fileID: 2040459882}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1800,22 +1847,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2040459882
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2040459881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c8c95667243aaf48b6a446a6551deff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _slider: {fileID: 1309606621}
-  _layoutHearts: {fileID: 1246130743}
-  _heartPrefab: {fileID: 3802426646317190032, guid: 96d0b4f3402a59c40a52b59f04a10f6b,
-    type: 3}
 --- !u!114 &2040459883
 MonoBehaviour:
   m_ObjectHideFlags: 0

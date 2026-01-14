@@ -1,8 +1,15 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class Timer
 {
+    public event Action<float> TimeUpdated;
+
+    public event Action<bool> TimerIsPaused;
+
+    public event Action<bool> TimerIsRunning;
+ 
     private float _startSeconds;
 
     private float _waitingSeconds;
@@ -31,13 +38,16 @@ public class Timer
             _coroutineRunner.StopCoroutine(_coroutine);
 
         _coroutine = _coroutineRunner.StartCoroutine(StartProcess());
-        
+
+        TimerIsRunning?.Invoke(true);
         IsPaused = false;
+        TimerIsPaused?.Invoke(IsPaused);
     }
 
     public void Paused()
     {
         IsPaused = !IsPaused;
+        TimerIsPaused?.Invoke(IsPaused);
     }
 
     public void Stop()
@@ -46,6 +56,8 @@ public class Timer
         
         if (_coroutine != null)
             _coroutineRunner.StopCoroutine(_coroutine);
+
+        TimerIsRunning?.Invoke(false);
     }
 
     IEnumerator StartProcess()
@@ -61,6 +73,7 @@ public class Timer
 
             yield return new WaitForSeconds(_waitingSeconds);
             CurrentTime -= _waitingSeconds;
+            TimeUpdated?.Invoke(CurrentTime);
         }
 
         IsRunning = false;
