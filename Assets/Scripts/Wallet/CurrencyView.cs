@@ -15,20 +15,32 @@ public class CurrencyView : MonoBehaviour
 
     private int _valueCurrency;
 
-    public void Initialize(TypeCurrency typeCurrency, Sprite sprite)
+    private IReadOnlyVariable<int> _currentBalance;
+
+    public void Initialize(TypeCurrency typeCurrency, Sprite sprite, IReadOnlyVariable<int> currentBalance)
     {
         _typeCurrency = typeCurrency;
+
+        _currentBalance = currentBalance;
+        _currentBalance.Changed += OnChangedBalance;
 
         _imageCurrency.sprite = sprite;
 
         _valueCurrency = 1;
+
+        UpdateText(_currentBalance.Value);
     }
 
-    public void UpdateText(int amount)
+    private void OnChangedBalance(int arg1, int currentBalance)
+    {
+        UpdateText(currentBalance);
+    }
+
+    private void UpdateText(int amount)
     {
         _text.text = amount.ToString();
     }
-    
+
     public void OnButtonAdd()
     {
         CurrencyChanged?.Invoke(this, _typeCurrency, TypeCurrencyChanged.Add, _valueCurrency);

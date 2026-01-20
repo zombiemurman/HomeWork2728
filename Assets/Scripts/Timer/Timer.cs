@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Timer
 {
-    public event Action<float> TimeUpdated;
+    private ReactiveVariable<float> _currentTime;
 
-    public event Action<bool> TimerIsPaused;
+    private ReactiveVariable<bool> _isPaused;
 
     public event Action<bool> TimerIsRunning;
  
@@ -21,16 +21,21 @@ public class Timer
     public Timer(MonoBehaviour coroutineRunner, float startSeconds)
     {
         _startSeconds = startSeconds;
+
+        _currentTime = new ReactiveVariable<float>(startSeconds);
+
+        _isPaused = new ReactiveVariable<bool>(false);
+
         _coroutineRunner = coroutineRunner;
 
         _waitingSeconds = 0.1f;
     }
 
-    public float CurrentTime { get; private set; }
+    public IReadOnlyVariable<float> CurrentTime => _currentTime;
+
+    public IReadOnlyVariable<bool> IsPaused => _isPaused;
 
     public bool IsRunning { get; private set; }
-
-    public bool IsPaused { get; private set; }
 
     public void Start()
     {
@@ -40,19 +45,18 @@ public class Timer
         _coroutine = _coroutineRunner.StartCoroutine(StartProcess());
 
         TimerIsRunning?.Invoke(true);
-        IsPaused = false;
-        TimerIsPaused?.Invoke(IsPaused);
+        
+        _isPaused.Value = false;
     }
 
     public void Paused()
     {
-        IsPaused = !IsPaused;
-        TimerIsPaused?.Invoke(IsPaused);
+        _isPaused.Value = !_isPaused.Value;
     }
 
     public void Stop()
     {
-        IsPaused = false;
+        _isPaused.Value = false;
         
         if (_coroutine != null)
             _coroutineRunner.StopCoroutine(_coroutine);
@@ -64,16 +68,17 @@ public class Timer
     {
         IsRunning = true;
 
-        CurrentTime = _startSeconds;
+        _currentTime.Value = _startSeconds;
 
-        while (CurrentTime > 0)
+        while (_currentTime.Value > 0)
         {
-            while(IsPaused)
+            while(_isPaused.Value)
                 yield return null;
 
             yield return new WaitForSeconds(_waitingSeconds);
-            CurrentTime -= _waitingSeconds;
-            TimeUpdated?.Invoke(CurrentTime);
+            
+            _currentTime.Value -= _waitingSeconds;
+
         }
 
         IsRunning = false;

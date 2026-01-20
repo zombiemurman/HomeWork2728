@@ -21,9 +21,9 @@ public class WalletView : MonoBehaviour
         foreach (var currency in _wallet._balances)
         {
             CurrencyView currencyView = Instantiate(_buttonPrefab, _listContainer);
-            currencyView.UpdateText(currency.Value);
+            //currencyView.UpdateText(currency.Value.Value);
 
-            currencyView.Initialize(currency.Key, _sprites[(int)currency.Key]);
+            currencyView.Initialize(currency.Key, _sprites[(int)currency.Key], currency.Value);
             currencyView.CurrencyChanged += OnCurrencyButtonClick;
         }
     }
@@ -44,7 +44,7 @@ public class WalletView : MonoBehaviour
                 break;
         }
 
-        currency.UpdateText(_wallet.GetBalance(typeCurrency));
+        //currency.UpdateText(_wallet.GetBalance(typeCurrency).Value);
     }
 
 }

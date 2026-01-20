@@ -19,9 +19,22 @@ public class TimerController : MonoBehaviour
         _timerSliderView.Initialize(_timerTime);
         _timerHeartsView.Initialize(_timerTime);
 
-        _timer.TimeUpdated += OnTimeUpdated;
-        _timer.TimerIsPaused += OnTimerIsPaused;
+        _timer.CurrentTime.Changed += OnChangedCurrentTime;
+        _timer.IsPaused.Changed += OnChangedPaused;
+
         _timer.TimerIsRunning += OnTimerIsRunning;
+    }
+
+    private void OnChangedPaused(bool arg1, bool isPaused)
+    {
+        _timerSliderView.SetTimerPaused(isPaused);
+        _timerHeartsView.SetTimerPaused(isPaused);
+    }
+
+    private void OnChangedCurrentTime(float arg1, float currentTime)
+    {
+        _timerSliderView.SetCurrentTime(currentTime);
+        _timerHeartsView.SetCurrentTime(currentTime);
     }
 
     private void OnTimerIsRunning(bool isRunning)
@@ -30,22 +43,12 @@ public class TimerController : MonoBehaviour
         _timerHeartsView.SetTimerRunning(isRunning);
     }
 
-    private void OnTimerIsPaused(bool isPaused)
-    {
-        _timerSliderView.SetTimerPaused(isPaused);
-        _timerHeartsView.SetTimerPaused(isPaused);
-    }
-
-    private void OnTimeUpdated(float currentTime)
-    {
-        _timerSliderView.SetCurrentTime(currentTime);
-        _timerHeartsView.SetCurrentTime(currentTime);
-    }
-
     private void OnDestroy()
     {
-        _timer.TimeUpdated -= OnTimeUpdated;
-        _timer.TimerIsPaused -= OnTimerIsPaused;
+
+        _timer.CurrentTime.Changed -= OnChangedCurrentTime;
+        _timer.IsPaused.Changed -= OnChangedPaused;
+
         _timer.TimerIsRunning -= OnTimerIsRunning;
 
     }
